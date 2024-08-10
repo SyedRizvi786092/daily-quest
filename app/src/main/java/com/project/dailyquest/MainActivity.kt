@@ -8,7 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.project.dailyquest.navigation.AppNavigation
 import com.project.dailyquest.ui.theme.DailyQuestTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,9 +26,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun GoalTrackingApp(content: @Composable () -> Unit) {
-    content()
-}
+fun GoalTrackingApp(content: @Composable () -> Unit) = content()
 
 @Preview(showBackground = true)
 @Composable

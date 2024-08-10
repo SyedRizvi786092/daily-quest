@@ -1,13 +1,17 @@
 package com.project.dailyquest.data
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.project.dailyquest.utils.getEpochTime
 import java.util.UUID
 
+@Entity(tableName = "goals")
 data class Goal(
-    val id: UUID,
-    val name: String,
-    val description: String,
-    val deadline: Long?
+    @PrimaryKey val id: UUID,
+    @ColumnInfo(name = "goal_title") val title: String,
+    @ColumnInfo(name = "goal_description") val description: String?,
+    @ColumnInfo(name = "goal_deadline") val deadline: Long?
 )
 
 fun getDummyGoals(): List<Goal> {
@@ -15,7 +19,7 @@ fun getDummyGoals(): List<Goal> {
 
         Goal(
             id = UUID.randomUUID(),
-            name = "Learn DSA",
+            title = "Learn DSA",
             description = "Data Structures & Algorithms is a key concept which is crucial for " +
                     "Interview Preparation.",
             deadline = getEpochTime(date = "2024-11-30")
@@ -23,7 +27,7 @@ fun getDummyGoals(): List<Goal> {
 
         Goal(
             id = UUID.randomUUID(),
-            name = "Dive deep into Android Development",
+            title = "Dive deep into Android Development",
             description = "Mastering DSA is not enough in today's competitive world. Android " +
                     "Development is your passion, so follow that.",
             deadline = getEpochTime(date = "2025-01-31")
@@ -31,7 +35,7 @@ fun getDummyGoals(): List<Goal> {
 
         Goal(
             id = UUID.randomUUID(),
-            name = "Gain Spirituality",
+            title = "Gain Spirituality",
             description = "Remember that you are a follower of the one who promoted knowledge and" +
                     " education, but at the same time, instructed us to never leave the religion " +
                     "for this perishable world. How can you forget this!",

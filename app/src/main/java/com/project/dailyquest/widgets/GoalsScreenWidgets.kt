@@ -40,7 +40,11 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 
 @Composable
-fun ShowGoal(goal: Goal) {
+fun ShowGoal(
+    goal: Goal,
+    onEditGoal: () -> Unit,
+    onDeleteGoal: () -> Unit
+) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -56,25 +60,27 @@ fun ShowGoal(goal: Goal) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { onEditGoal() }) {
                     Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit")
                 }
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { onDeleteGoal() }) {
                     Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete")
                 }
             }
             Column {
                 Text(
-                    text = goal.name,
+                    text = goal.title,
                     style = LocalTextStyle.current.copy(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
                 )
-                Text(
-                    text = goal.description,
-                    style = LocalTextStyle.current.copy(fontSize = 12.sp)
-                )
+                goal.description?.let {
+                    Text(
+                        text = it,
+                        style = LocalTextStyle.current.copy(fontSize = 12.sp)
+                    )
+                }
                 if (goal.deadline != null)
                     Text(
                         text = "(Days Left: ${getRemainingDays(goal.deadline)})",
