@@ -2,6 +2,7 @@ package com.project.dailyquest.screens
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -29,11 +30,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,7 +40,8 @@ import com.project.dailyquest.data.Goal
 import com.project.dailyquest.data.getDummyGoals
 import com.project.dailyquest.widgets.AppScaffold
 import com.project.dailyquest.widgets.DisplayMainText
-import com.project.dailyquest.widgets.InputTextField
+import com.project.dailyquest.widgets.GoalDetailsTab
+import com.project.dailyquest.widgets.GoalTextFields
 import com.project.dailyquest.widgets.NavigationBar
 import com.project.dailyquest.widgets.ShowDatePicker
 import com.project.dailyquest.widgets.ShowGoal
@@ -60,18 +59,14 @@ fun GoalsScreen(
     onEditGoal: (Goal) -> Unit,
     onNavigateToHome: () -> Unit
 ) {
-    var title by remember {
-        mutableStateOf("")
-    }
-    var description by remember {
-        mutableStateOf("")
-    }
-    var deadlinePicker by remember {
-        mutableStateOf(false)
-    }
+    var title by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var deadlinePicker by remember { mutableStateOf(false) }
     var deadline: Long? = null
+    var showGoalDetails by remember { mutableStateOf(false) }
+    var selectedGoal by remember { mutableStateOf<Goal?>(null) }
+    var goalEditState by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    val keyboardController = LocalSoftwareKeyboardController.current
     AppScaffold(title = "Goals",
         topAppBarColor = MaterialTheme.colorScheme.primaryContainer,
         homeButton = { IconButton(onClick = onNavigateToHome,
@@ -82,73 +77,91 @@ fun GoalsScreen(
         }) { innerPadding ->
         Column(modifier = Modifier
             .padding(innerPadding)
-            .padding(20.dp)
+            .padding(16.dp)
             .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally) {
-            DisplayMainText(key = "Active Goals: ", value = "3", fontSize = 42.sp)
-            Spacer(modifier = Modifier.height(15.dp))
+
+            // Displaying Current Active Goals
+            DisplayMainText(key = "Active Goals: ", value = "3", fontSize = 40.sp)
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Row for View and Add Buttons
             Row {
                 Button(onClick = { if (addGoals) onToggleAdd()
                     onToggleView() }) {
                     Icon(painter = if (viewGoals) painterResource(id = R.drawable.hide)
                         else painterResource(id = R.drawable.view),
                         contentDescription = "View/Hide")
-                    Spacer(modifier = Modifier.width(5.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
                     Text(text = if (viewGoals) "Hide" else "View")
                 }
-                Spacer(modifier = Modifier.width(20.dp))
+                Spacer(modifier = Modifier.width(16.dp))
                 Button(onClick = { if (viewGoals) onToggleView()
                     onToggleAdd() },
                     enabled = !addGoals) {
                     Icon(imageVector = Icons.Default.Add,
                         contentDescription = "Add")
-                    Spacer(modifier = Modifier.width(5.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
                     Text(text = "Add")
                 }
             }
-            Spacer(modifier = Modifier.height(10.dp))
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // View Goals Tab
             AnimatedVisibility(visible = viewGoals,
                 modifier = Modifier.heightIn(max = 350.dp)) {
                 LazyColumn {
-                    items(items = goals) {
-                        ShowGoal(goal = it,
-                            onEditGoal = {},
-                            onDeleteGoal = { onDeleteGoal(it) })
+                    items(items = goals) { currentGoal ->
+                        ShowGoal(modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { selectedGoal = currentGoal
+                                goalEditState = false
+                                showGoalDetails = true
+                            },
+                            goal = currentGoal,
+                            onEditGoal = { selectedGoal = currentGoal
+                                goalEditState = true
+                                showGoalDetails = true },
+                            onDeleteGoal = { onDeleteGoal(currentGoal) })
                     }
                 }
             }
+
+            // Add Goals Tab
             AnimatedVisibility(visible = addGoals,
                 modifier = Modifier.heightIn(max = 350.dp)) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    InputTextField(text = title,
-                        onTextChange = { newText ->
-                            title = newText
+
+                    // Display Title and Description Text Fields
+                    GoalTextFields(
+                        goalTitle = title,
+                        onTitleChange = { newTitle ->
+                            title = newTitle
                         },
-                        label = "Title",
-                        imeAction = ImeAction.Next,
-                        onImeAction = { keyboardController?.hide() },
-                        maxLines = 2)
-                    InputTextField(modifier = Modifier.fillMaxWidth(),
-                        text = description,
-                        onTextChange = { newText ->
-                            description = newText
-                        },
-                        label = "Description",
-                        imeAction = ImeAction.Done,
-                        onImeAction = { keyboardController?.hide() },
-                        maxLines = 7,
-                        color = Color.Transparent)
-                    Spacer(modifier = Modifier.height(10.dp))
-                    TextButton(onClick = { deadlinePicker = !deadlinePicker },
+                        goalDescription = description,
+                        onDescriptionChange = { newDescription ->
+                            description = newDescription
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Set Deadline Text Button
+                    TextButton(onClick = { deadlinePicker = true },
                         colors = ButtonDefaults.textButtonColors(
                             contentColor = MaterialTheme.colorScheme.error)
                     ) {
                         Text(text = "Set deadline")
                     }
+
                     Spacer(modifier = Modifier.height(4.dp))
+
+                    // Save Goal Button
                     Button(onClick = { onAddGoal(Goal(id = UUID.randomUUID(),
                             title = title,
-                            description = description,
+                            description = description.ifBlank { null },
                             deadline = deadline))
                         Toast.makeText(context, "Goal Added!", Toast.LENGTH_SHORT).show()
                         title = ""
@@ -162,13 +175,24 @@ fun GoalsScreen(
                         Text(text = "Save")
                     }
                     if (deadlinePicker)
-                        ShowDatePicker(onDateSelected = { deadline = it },
+                        ShowDatePicker(title = "Set Deadline",
+                            initialDate = deadline,
+                            onDateSelected = { deadline = it },
                             onDismiss = { deadlinePicker = false })
                 }
             }
             NavigationBar(disabledButton = "Configure Goals")
         }
     }
+    if (showGoalDetails && selectedGoal != null)
+        GoalDetailsTab(
+            goal = selectedGoal!!,
+            editable = goalEditState,
+            onToggleEdit = { goalEditState = !goalEditState },
+            onEdited = { updatedGoal -> onEditGoal(updatedGoal) },
+            onDismiss = { selectedGoal = null
+                showGoalDetails = false }
+        )
 }
 
 @Preview

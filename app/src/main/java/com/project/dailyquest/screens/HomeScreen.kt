@@ -24,12 +24,12 @@ fun HomeScreen(onNavigateToGoals: () -> Unit = {}) {
         topAppBarColor = MaterialTheme.colorScheme.tertiaryContainer) { innerPadding ->
         Column(modifier = Modifier
             .padding(innerPadding)
-            .padding(20.dp)
+            .padding(16.dp)
             .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally) {
             Text(text = "Hello, User!",
-                modifier = Modifier.padding(20.dp),
-                style = LocalTextStyle.current.copy(fontSize = 42.sp,
+                modifier = Modifier.padding(16.dp),
+                style = LocalTextStyle.current.copy(fontSize = 40.sp,
                     fontFamily = FontFamily.Serif)
             )
             DashboardContent()

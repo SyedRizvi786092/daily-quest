@@ -37,9 +37,23 @@ fun getDummyGoals(): List<Goal> {
             id = UUID.randomUUID(),
             title = "Gain Spirituality",
             description = "Remember that you are a follower of the one who promoted knowledge and" +
-                    " education, but at the same time, instructed us to never leave the religion " +
-                    "for this perishable world. How can you forget this!",
+                    " education, but at the same time, instructed us to never bargain the " +
+                    "eternal life for this perishable world. How can you forget this!",
             deadline = null
+        ),
+
+        Goal(
+            id = UUID.randomUUID(),
+            title = "Do something for the community!",
+            description = null,
+            deadline = null
+        ),
+
+        Goal(
+            id = UUID.randomUUID(),
+            title = "For Testing Purposes",
+            description = null,
+            deadline = getEpochTime(date = "2024-10-10")
         )
     )
 }

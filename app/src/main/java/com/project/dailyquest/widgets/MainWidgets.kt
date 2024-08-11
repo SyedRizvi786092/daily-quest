@@ -78,7 +78,7 @@ private fun NavigationButton(
 ) {
     Surface(onClick = onClick,
         modifier = modifier
-            .padding(5.dp)
+            .padding(4.dp)
             .height(100.dp),
         enabled = enabled,
         shape = CutCornerShape(20.dp),
@@ -94,7 +94,7 @@ private fun NavigationButton(
                 modifier = Modifier.size(40.dp))
             Text(text = text,
                 modifier = Modifier.padding(top = 2.dp),
-                style = LocalTextStyle.current.copy(fontSize = 10.sp))
+                style = LocalTextStyle.current.copy(fontSize = 8.sp))
         }
     }
 }
@@ -108,7 +108,7 @@ fun DashboardContent(
 ) {
     Surface(modifier = Modifier
         .fillMaxWidth()
-        .padding(10.dp),
+        .padding(8.dp),
         shape = RoundedCornerShape(10.dp),
         color = MaterialTheme.colorScheme.surfaceVariant
     ) {
@@ -116,12 +116,12 @@ fun DashboardContent(
             DisplayMainText(key = "Currently Active Goals: ",
                 value = "$goalsCount",
                 fontSize = 20.sp)
-            HorizontalDivider(thickness = 5.dp,
+            HorizontalDivider(thickness = 4.dp,
                 color = MaterialTheme.colorScheme.surface)
             DisplayMainText(key = "Today's Pending Tasks: ",
                 value = "$pendingTasks",
                 fontSize = 20.sp)
-            HorizontalDivider(thickness = 5.dp,
+            HorizontalDivider(thickness = 4.dp,
                 color = MaterialTheme.colorScheme.surface)
             DisplayMainText(key = "Average sleep/day: ",
                 value = "$avgSleep hrs",
@@ -141,7 +141,7 @@ fun DisplayMainText(key: String, value: String, fontSize: TextUnit) {
         }
     }
     Text(text = text,
-        modifier = Modifier.padding(5.dp),
+        modifier = Modifier.padding(4.dp),
         style = LocalTextStyle.current.copy(fontSize = fontSize))
 }
 
