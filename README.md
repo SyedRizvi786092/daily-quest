@@ -5,14 +5,13 @@ Daily Quest is an Android application designed to help users evaluate their dail
 
 ## Current Features
 - Home page with user greeting and dashboard
-- Goal configuration
-- Daily task tracking and management
-- Sleep monitoring (basic implementation)
+- Goal configuration (add, edit and delete goals)
 
 ## Planned Features
+- Daily task tracking and management
+- Sleep tracking with graphical representations
 - Detailed activity analytics
 - Push notifications for task reminders
-- Advanced sleep tracking with graphical representations
 - User authentication and data synchronization
 
 ## Getting Started
