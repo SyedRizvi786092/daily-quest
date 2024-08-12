@@ -14,6 +14,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -50,7 +52,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.project.dailyquest.data.Goal
-import com.project.dailyquest.data.getDummyGoals
 import com.project.dailyquest.utils.getDecoratedDeadline
 import com.project.dailyquest.utils.getRemainingDays
 import kotlinx.datetime.Clock
@@ -78,7 +79,7 @@ fun ShowGoal(
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { onEditGoal() }) {
+            IconButton(onClick = onEditGoal) {
                 Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit")
             }
             Column(modifier = Modifier.fillMaxWidth(0.8f)) {
@@ -105,7 +106,7 @@ fun ShowGoal(
                     )
                 }
             }
-            IconButton(onClick = { onDeleteGoal() }) {
+            IconButton(onClick = onDeleteGoal) {
                 Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete")
             }
         }
@@ -201,14 +202,13 @@ fun GoalTextFields(
     }
 }
 
-@Preview
 @Composable
 fun GoalDetailsTab(
-    goal: Goal = getDummyGoals()[1],
-    editable: Boolean = false,
-    onToggleEdit: () -> Unit = {},
-    onEdited: (Goal) -> Unit = {},
-    onDismiss: () -> Unit = {}
+    goal: Goal,
+    editable: Boolean,
+    onToggleEdit: () -> Unit,
+    onEdited: (Goal) -> Unit,
+    onDismiss: () -> Unit
 ) {
     var goalTitle by remember {
         mutableStateOf(goal.title)
@@ -229,7 +229,11 @@ fun GoalDetailsTab(
             Column(modifier = Modifier.padding(4.dp),
                 horizontalAlignment = Alignment.CenterHorizontally) {
                 Spacer(modifier = Modifier.height(16.dp))
+                
+                // Tab in Edit Mode
                 if (editable) {
+                    
+                    // Title and Description Text Fields
                     GoalTextFields(
                         goalTitle = goalTitle,
                         onTitleChange = { newTitle ->
@@ -240,12 +244,17 @@ fun GoalDetailsTab(
                             goalDescription = newDescription
                         }
                     )
+                    
+                    // Add Description Button
                     if (goalDescription == null)
                         Button(onClick = { goalDescription = "" },
                             modifier = Modifier.padding(top = 4.dp)) {
                             Text(text = "Add Description")
                         }
+                    
                     Spacer(modifier = Modifier.height(8.dp))
+                    
+                    // Set Deadline Text Button
                     if (goalDeadline == null) {
                         TextButton(onClick = { deadlinePicker = !deadlinePicker },
                             colors = ButtonDefaults.textButtonColors(
@@ -254,6 +263,7 @@ fun GoalDetailsTab(
                             Text(text = "Set deadline")
                         }
                     }
+                    // Deadline and Edit Icon next to it
                     else {
                         Row {
                             Text(text = getDecoratedDeadline(goalDeadline!!),
@@ -265,7 +275,11 @@ fun GoalDetailsTab(
                         }
                     }
                 }
+
+                // Tab in View Mode
                 else {
+                    
+                    // Title and Edit Icon
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(text = goal.title,
                             modifier = Modifier.fillMaxWidth(0.8f),
@@ -276,19 +290,27 @@ fun GoalDetailsTab(
                             Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit")
                         }
                     }
+                    
                     HorizontalDivider(modifier = Modifier.padding(top = 4.dp, bottom = 2.dp),
                         thickness = 2.dp)
+                    
+                    // Show Description
                     if (goal.description != null) {
                         Text(text = goal.description,
                             style = LocalTextStyle.current.copy(fontSize = 16.sp))
                         HorizontalDivider(modifier = Modifier.padding(vertical = 2.dp))
                     }
+                    
+                    // Show Deadline
                     if (goal.deadline != null) {
                         Text(text = getDecoratedDeadline(goal.deadline),
                             style = LocalTextStyle.current.copy(fontSize = 12.sp))
                     }
                 }
+                
                 Spacer(modifier = Modifier.height(24.dp))
+                
+                // Dialog Action Buttons
                 Row(modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End) {
                     if (editable)
@@ -314,4 +336,22 @@ fun GoalDetailsTab(
             initialDate = goalDeadline,
             onDateSelected = { goalDeadline = it },
             onDismiss = { deadlinePicker = false })
+}
+
+@Preview
+@Composable
+fun DeleteConfirmationDialog(onConfirm: () -> Unit = {}, onDismiss: () -> Unit = {}) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = { TextButton(onClick = onConfirm) {
+            Text(text = "Yes")
+        } },
+        dismissButton = { TextButton(onClick = onDismiss) {
+            Text(text = "Cancel")
+        } },
+        icon = { Icon(imageVector = Icons.Filled.Warning, contentDescription = "Warning") },
+        title = { Text(text = "Confirm Delete") },
+        text = { Text(text = "Are you sure you want to delete this goal?") },
+        iconContentColor = Color(0xFFFFA000)
+    )
 }

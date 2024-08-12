@@ -39,6 +39,7 @@ import com.project.dailyquest.R
 import com.project.dailyquest.data.Goal
 import com.project.dailyquest.data.getDummyGoals
 import com.project.dailyquest.widgets.AppScaffold
+import com.project.dailyquest.widgets.DeleteConfirmationDialog
 import com.project.dailyquest.widgets.DisplayMainText
 import com.project.dailyquest.widgets.GoalDetailsTab
 import com.project.dailyquest.widgets.GoalTextFields
@@ -66,6 +67,7 @@ fun GoalsScreen(
     var showGoalDetails by remember { mutableStateOf(false) }
     var selectedGoal by remember { mutableStateOf<Goal?>(null) }
     var goalEditState by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
     AppScaffold(title = "Goals",
         topAppBarColor = MaterialTheme.colorScheme.primaryContainer,
@@ -116,7 +118,8 @@ fun GoalsScreen(
                     items(items = goals) { currentGoal ->
                         ShowGoal(modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { selectedGoal = currentGoal
+                            .clickable {
+                                selectedGoal = currentGoal
                                 goalEditState = false
                                 showGoalDetails = true
                             },
@@ -124,7 +127,9 @@ fun GoalsScreen(
                             onEditGoal = { selectedGoal = currentGoal
                                 goalEditState = true
                                 showGoalDetails = true },
-                            onDeleteGoal = { onDeleteGoal(currentGoal) })
+                            onDeleteGoal = { selectedGoal = currentGoal
+                            showDeleteDialog = true }
+                        )
                     }
                 }
             }
@@ -184,6 +189,8 @@ fun GoalsScreen(
             NavigationBar(disabledButton = "Configure Goals")
         }
     }
+
+    // Show Goal details when a goal is clicked
     if (showGoalDetails && selectedGoal != null)
         GoalDetailsTab(
             goal = selectedGoal!!,
@@ -192,6 +199,16 @@ fun GoalsScreen(
             onEdited = { updatedGoal -> onEditGoal(updatedGoal) },
             onDismiss = { selectedGoal = null
                 showGoalDetails = false }
+        )
+
+    // Show confirmation dialog when user tries to delete a goal
+    if (showDeleteDialog && selectedGoal != null)
+        DeleteConfirmationDialog(
+            onConfirm = { onDeleteGoal(selectedGoal!!)
+                selectedGoal = null
+                showDeleteDialog = false },
+            onDismiss = { selectedGoal = null
+                showDeleteDialog = false }
         )
 }
 
