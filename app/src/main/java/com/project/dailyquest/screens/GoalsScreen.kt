@@ -41,7 +41,6 @@ import com.project.dailyquest.widgets.DeleteConfirmationDialog
 import com.project.dailyquest.widgets.DisplayMainText
 import com.project.dailyquest.widgets.GoalDetailsTab
 import com.project.dailyquest.widgets.GoalTextFields
-import com.project.dailyquest.widgets.NavigationBar
 import com.project.dailyquest.widgets.ShowDatePicker
 import com.project.dailyquest.widgets.ShowGoal
 import java.util.UUID
@@ -104,7 +103,7 @@ fun GoalsScreen(
 
         // View Goals Tab
         AnimatedVisibility(visible = viewGoals,
-            modifier = Modifier.heightIn(max = 350.dp)) {
+            modifier = Modifier.heightIn(max = 400.dp)) {
             LazyColumn {
                 items(items = goals) { currentGoal ->
                     ShowGoal(modifier = Modifier
@@ -127,7 +126,7 @@ fun GoalsScreen(
 
         // Add Goals Tab
         AnimatedVisibility(visible = addGoals,
-            modifier = Modifier.heightIn(max = 350.dp)) {
+            modifier = Modifier.heightIn(max = 400.dp)) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
                 // Display Title and Description Text Fields
@@ -177,7 +176,6 @@ fun GoalsScreen(
                         onDismiss = { deadlinePicker = false })
             }
         }
-        NavigationBar(disabledButton = "Configure Goals")
     }
 
     // Show Goal details when a goal is clicked

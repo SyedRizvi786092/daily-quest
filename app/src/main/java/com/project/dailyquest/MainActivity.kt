@@ -30,7 +30,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.project.dailyquest.navigation.AppNavigation
 import com.project.dailyquest.navigation.AppScreens
+import com.project.dailyquest.navigation.getAllNavBarItems
 import com.project.dailyquest.ui.theme.DailyQuestTheme
+import com.project.dailyquest.widgets.BottomNavigationBar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -89,7 +91,16 @@ fun AppContent() {
                     titleContentColor = contentColorFor(backgroundColor = topAppBarColor)
                 )
             )
-        }
+        },
+        bottomBar = { BottomNavigationBar(
+            items = getAllNavBarItems(),
+            currentScreen = currentScreen,
+            onNavigateToScreen = { screenRoute ->
+                if (screenRoute != null) {
+                    navController.navigate(screenRoute)
+                }
+            }
+        ) }
     ) { innerPadding ->
         AppNavigation(
             navController = navController,

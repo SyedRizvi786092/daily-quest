@@ -1,25 +1,19 @@
 package com.project.dailyquest.widgets
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -30,38 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.project.dailyquest.R
-
-@Composable
-private fun NavigationButton(
-    modifier: Modifier = Modifier,
-    text: String,
-    icon: Int,
-    enabled: Boolean = true,
-    onClick: () -> Unit
-) {
-    Surface(onClick = onClick,
-        modifier = modifier
-            .padding(4.dp)
-            .height(100.dp),
-        enabled = enabled,
-        shape = CutCornerShape(20.dp),
-        color = if (enabled) MaterialTheme.colorScheme.surfaceTint
-        else MaterialTheme.colorScheme.tertiaryContainer,
-        tonalElevation = 4.dp,
-        shadowElevation = 4.dp) {
-        Column(modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center) {
-            Icon(painter = painterResource(id = icon),
-                contentDescription = "Button Icon",
-                modifier = Modifier.size(40.dp))
-            Text(text = text,
-                modifier = Modifier.padding(top = 2.dp),
-                style = LocalTextStyle.current.copy(fontSize = 8.sp))
-        }
-    }
-}
+import com.project.dailyquest.navigation.AppScreens
+import com.project.dailyquest.navigation.NavBarItem
 
 @Preview(showBackground = true)
 @Composable
@@ -110,29 +74,29 @@ fun DisplayMainText(key: String, value: String, fontSize: TextUnit) {
 }
 
 @Composable
-fun NavigationBar(
-    disabledButton: String? = null,
-    onClickGoals: () -> Unit = {},
-    onClickTasks: () -> Unit = {},
-    onClickSleep: () -> Unit = {}
+fun BottomNavigationBar(
+    modifier: Modifier = Modifier,
+    items: List<NavBarItem>,
+    currentScreen: AppScreens,
+    onNavigateToScreen: (String?) -> Unit
 ) {
-    LazyVerticalGrid(columns = GridCells.Fixed(3),
-        modifier = Modifier.fillMaxHeight(),
-        reverseLayout = true) {
-        item {
-            NavigationButton(text = "Configure Goals",
-                icon = R.drawable.target,
-                enabled = !(disabledButton.equals("Configure Goals"))) { onClickGoals() }
-        }
-        item {
-            NavigationButton(text = "Today's Tasks",
-                icon = R.drawable.task,
-                enabled = !(disabledButton.equals("Today's Tasks"))) { onClickTasks() }
-        }
-        item {
-            NavigationButton(text = "Monitor Sleep",
-                icon = R.drawable.sleep,
-                enabled = !(disabledButton.equals("Monitor Sleep"))) { onClickSleep() }
+    NavigationBar(
+        modifier = modifier,
+        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+        tonalElevation = 4.dp
+    ) {
+        items.forEach {
+            NavigationBarItem(
+                selected = it.screen == currentScreen,
+                onClick = { onNavigateToScreen(it.screen?.name) },
+                icon = { Icon(
+                    painter = painterResource(id = it.icon),
+                    contentDescription = "Navigation Icon"
+                ) },
+                label = { Text(text = it.text) },
+                colors = NavigationBarItemDefaults.colors(
+                    indicatorColor = MaterialTheme.colorScheme.primaryContainer)
+            )
         }
     }
 }

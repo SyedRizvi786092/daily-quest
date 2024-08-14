@@ -14,7 +14,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.dailyquest.widgets.DashboardContent
-import com.project.dailyquest.widgets.NavigationBar
 
 @Preview(showBackground = true)
 @Composable
@@ -33,6 +32,5 @@ fun HomeScreen(
                 fontFamily = FontFamily.Serif)
         )
         DashboardContent()
-        NavigationBar(onClickGoals = onNavigateToGoals)
     }
 }
