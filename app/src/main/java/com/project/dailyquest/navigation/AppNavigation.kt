@@ -14,14 +14,14 @@ import androidx.navigation.compose.composable
 import com.project.dailyquest.screens.GoalsScreen
 import com.project.dailyquest.screens.GoalsViewModel
 import com.project.dailyquest.screens.HomeScreen
+import com.project.dailyquest.screens.SplashScreen
 
 @Composable
 fun AppNavigation(
     navController: NavHostController,
+    startDestination: String,
     scaffoldPadding: PaddingValues
 ) {
-    val viewModel = hiltViewModel<GoalsViewModel>()
-
     var viewGoals by remember {
         mutableStateOf(false)
     }
@@ -29,9 +29,16 @@ fun AppNavigation(
         mutableStateOf(false)
     }
 
-    NavHost(navController = navController, startDestination = AppScreens.HomeScreen.name) {
+    NavHost(navController = navController, startDestination = startDestination) {
+
+        composable(route = AppScreens.SplashScreen.name) {
+            SplashScreen(
+                onSplashScreenFinish = { navController.navigate(AppScreens.HomeScreen.name) }
+            )
+        }
 
         composable(route = AppScreens.HomeScreen.name) {
+            val viewModel = hiltViewModel<GoalsViewModel>()
             val goalCount = viewModel.goalCount.collectAsStateWithLifecycle().value
             HomeScreen(
                 scaffoldPadding = scaffoldPadding,
@@ -41,6 +48,7 @@ fun AppNavigation(
         }
 
         composable(route = AppScreens.GoalsScreen.name) {
+            val viewModel = hiltViewModel<GoalsViewModel>()
             val goals = viewModel.state.collectAsStateWithLifecycle().value
             GoalsScreen(
                 scaffoldPadding = scaffoldPadding,

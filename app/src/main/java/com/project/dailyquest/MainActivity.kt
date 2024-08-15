@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
@@ -58,54 +59,67 @@ fun AppContent() {
             when(currentBackStackEntry?.destination?.route) {
                 AppScreens.HomeScreen.name -> AppScreens.HomeScreen
                 AppScreens.GoalsScreen.name -> AppScreens.GoalsScreen
-                else -> AppScreens.HomeScreen
+                else -> AppScreens.SplashScreen
             }
         )
     }
-    val topAppBarColor = when(currentScreen) {
-        AppScreens.HomeScreen -> MaterialTheme.colorScheme.tertiaryContainer
-        AppScreens.GoalsScreen -> MaterialTheme.colorScheme.primaryContainer
-    }
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Row(modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center) {
-                        Text(text = when(currentScreen) {
-                            AppScreens.HomeScreen -> "Dashboard"
-                            AppScreens.GoalsScreen -> "Goals"
-                        },
-                            style = LocalTextStyle.current.copy(fontWeight = FontWeight.Bold))
-                    }
-                },
-                actions = { if (currentScreen != AppScreens.HomeScreen)
-                    IconButton(onClick = { navController.navigate(AppScreens.HomeScreen.name) {
-                        popUpTo(AppScreens.HomeScreen.name) {
-                            inclusive = true
-                        } } }) {
-                        Icon(imageVector = Icons.Default.Home, contentDescription = "Home")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = topAppBarColor,
-                    titleContentColor = contentColorFor(backgroundColor = topAppBarColor)
-                )
-            )
-        },
-        bottomBar = { BottomNavigationBar(
-            items = getAllNavBarItems(),
-            currentScreen = currentScreen,
-            onNavigateToScreen = { screenRoute ->
-                if (screenRoute != null) {
-                    navController.navigate(screenRoute)
-                }
-            }
-        ) }
-    ) { innerPadding ->
+
+    if (currentScreen == AppScreens.SplashScreen) {
         AppNavigation(
             navController = navController,
-            scaffoldPadding = innerPadding
+            startDestination = AppScreens.SplashScreen.name,
+            scaffoldPadding = PaddingValues()
         )
+    }
+    else {
+        val topAppBarColor = when(currentScreen) {
+            AppScreens.HomeScreen -> MaterialTheme.colorScheme.tertiaryContainer
+            AppScreens.GoalsScreen -> MaterialTheme.colorScheme.primaryContainer
+            else -> MaterialTheme.colorScheme.background
+        }
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Row(modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center) {
+                            Text(text = when(currentScreen) {
+                                AppScreens.HomeScreen -> "Dashboard"
+                                AppScreens.GoalsScreen -> "Goals"
+                                else -> ""
+                            },
+                                style = LocalTextStyle.current.copy(fontWeight = FontWeight.Bold))
+                        }
+                    },
+                    actions = { if (currentScreen != AppScreens.HomeScreen)
+                        IconButton(onClick = { navController.navigate(AppScreens.HomeScreen.name) {
+                            popUpTo(AppScreens.HomeScreen.name) {
+                                inclusive = true
+                            } } }) {
+                            Icon(imageVector = Icons.Default.Home, contentDescription = "Home")
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = topAppBarColor,
+                        titleContentColor = contentColorFor(backgroundColor = topAppBarColor)
+                    )
+                )
+            },
+            bottomBar = { BottomNavigationBar(
+                items = getAllNavBarItems(),
+                currentScreen = currentScreen,
+                onNavigateToScreen = { screenRoute ->
+                    if (screenRoute != null) {
+                        navController.navigate(screenRoute)
+                    }
+                }
+            ) }
+        ) { innerPadding ->
+            AppNavigation(
+                navController = navController,
+                startDestination = AppScreens.HomeScreen.name,
+                scaffoldPadding = innerPadding
+            )
+        }
     }
 }
 
