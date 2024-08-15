@@ -20,6 +20,8 @@ fun AppNavigation(
     navController: NavHostController,
     scaffoldPadding: PaddingValues
 ) {
+    val viewModel = hiltViewModel<GoalsViewModel>()
+
     var viewGoals by remember {
         mutableStateOf(false)
     }
@@ -30,14 +32,15 @@ fun AppNavigation(
     NavHost(navController = navController, startDestination = AppScreens.HomeScreen.name) {
 
         composable(route = AppScreens.HomeScreen.name) {
+            val goalCount = viewModel.goalCount.collectAsStateWithLifecycle().value
             HomeScreen(
                 scaffoldPadding = scaffoldPadding,
+                goalCount = goalCount,
                 onNavigateToGoals = { navController.navigate(AppScreens.GoalsScreen.name) }
             )
         }
 
         composable(route = AppScreens.GoalsScreen.name) {
-            val viewModel = hiltViewModel<GoalsViewModel>()
             val goals = viewModel.state.collectAsStateWithLifecycle().value
             GoalsScreen(
                 scaffoldPadding = scaffoldPadding,

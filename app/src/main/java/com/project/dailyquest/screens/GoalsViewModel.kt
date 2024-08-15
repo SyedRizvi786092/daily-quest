@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,9 +19,15 @@ class GoalsViewModel @Inject constructor(private val repository: AppRepository):
     private val _state = MutableStateFlow(getDummyGoals())
     val state: StateFlow<List<Goal>> = _state
 
+    private val _goalCount = MutableStateFlow(getDummyGoals().count())
+    val goalCount = _goalCount.asStateFlow()
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getAllGoals().distinctUntilChanged().collect { _state.value = it }
+            repository.getAllGoals().collect { _state.value = it }
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.countGoals().distinctUntilChanged().collect { _goalCount.value = it }
         }
     }
 

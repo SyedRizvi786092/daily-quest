@@ -30,7 +30,7 @@ import com.project.dailyquest.navigation.NavBarItem
 @Preview(showBackground = true)
 @Composable
 fun DashboardContent(
-    goalsCount: Int = 3,
+    goalCount: Int = 3,
     pendingTasks: Int = 2,
     avgSleep: Double = 7.4
 ) {
@@ -42,7 +42,7 @@ fun DashboardContent(
     ) {
         Column {
             DisplayMainText(key = "Currently Active Goals: ",
-                value = "$goalsCount",
+                value = "$goalCount",
                 fontSize = 20.sp)
             HorizontalDivider(thickness = 4.dp,
                 color = MaterialTheme.colorScheme.surface)

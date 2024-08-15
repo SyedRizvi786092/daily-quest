@@ -267,7 +267,7 @@ fun GoalDetailsTab(
                     else {
                         Row {
                             Text(text = getDecoratedDeadline(goalDeadline!!),
-                                modifier = Modifier.fillMaxWidth(0.7f),
+                                modifier = Modifier.fillMaxWidth(0.8f),
                                 style = LocalTextStyle.current.copy(fontSize = 12.sp))
                             Spacer(modifier = Modifier.width(2.dp))
                             Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit",

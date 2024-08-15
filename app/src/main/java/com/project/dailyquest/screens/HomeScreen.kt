@@ -13,12 +13,14 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.project.dailyquest.data.getDummyGoals
 import com.project.dailyquest.widgets.DashboardContent
 
 @Preview(showBackground = true)
 @Composable
 fun HomeScreen(
     scaffoldPadding: PaddingValues = PaddingValues(),
+    goalCount: Int = getDummyGoals().count(),
     onNavigateToGoals: () -> Unit = {}
 ) {
     Column(modifier = Modifier
@@ -31,6 +33,6 @@ fun HomeScreen(
             style = LocalTextStyle.current.copy(fontSize = 40.sp,
                 fontFamily = FontFamily.Serif)
         )
-        DashboardContent()
+        DashboardContent(goalCount = goalCount)
     }
 }

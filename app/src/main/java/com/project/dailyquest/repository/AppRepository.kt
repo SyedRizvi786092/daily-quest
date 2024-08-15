@@ -10,6 +10,9 @@ import javax.inject.Inject
 
 class AppRepository @Inject constructor(private val goalDao: GoalDao) {
 
+    fun countGoals(): Flow<Int> {
+        return goalDao.countGoals().flowOn(Dispatchers.IO).conflate()
+    }
     fun getAllGoals(): Flow<List<Goal>> {
         return goalDao.getAllGoals().flowOn(Dispatchers.IO).conflate()
     }
