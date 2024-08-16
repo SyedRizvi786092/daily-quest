@@ -87,8 +87,8 @@ fun BottomNavigationBar(
     ) {
         items.forEach {
             NavigationBarItem(
-                selected = it.screen == currentScreen,
-                onClick = { onNavigateToScreen(it.screen?.name) },
+                selected = AppScreens.fromRoute(it.route) == currentScreen,
+                onClick = { onNavigateToScreen(it.route) },
                 icon = { Icon(
                     painter = painterResource(id = it.icon),
                     contentDescription = "Navigation Icon"

@@ -26,7 +26,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.project.dailyquest.navigation.AppNavigation
@@ -56,11 +55,8 @@ fun AppContent() {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen by remember(currentBackStackEntry) {
         mutableStateOf(
-            when(currentBackStackEntry?.destination?.route) {
-                AppScreens.HomeScreen.name -> AppScreens.HomeScreen
-                AppScreens.GoalsScreen.name -> AppScreens.GoalsScreen
-                else -> AppScreens.SplashScreen
-            }
+            AppScreens.fromRoute(currentBackStackEntry?.destination?.route)
+                ?: AppScreens.SplashScreen
         )
     }
 
@@ -120,13 +116,5 @@ fun AppContent() {
                 scaffoldPadding = innerPadding
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    DailyQuestTheme {
-        AppContent()
     }
 }

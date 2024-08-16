@@ -48,6 +48,7 @@ import java.util.UUID
 @Composable
 fun GoalsScreen(
     scaffoldPadding: PaddingValues,
+    goalCount: Int,
     viewGoals: Boolean,
     onToggleView: () -> Unit,
     addGoals: Boolean,
@@ -74,7 +75,7 @@ fun GoalsScreen(
         horizontalAlignment = Alignment.CenterHorizontally) {
 
         // Displaying Current Active Goals
-        DisplayMainText(key = "Active Goals: ", value = "3", fontSize = 40.sp)
+        DisplayMainText(key = "Active Goals: ", value = "$goalCount", fontSize = 40.sp)
 
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -205,6 +206,7 @@ fun GoalsScreen(
 fun GoalsScreenPreview() {
     GoalsScreen(
         scaffoldPadding = PaddingValues(),
+        goalCount = 3,
         viewGoals = true,
         onToggleView = {},
         addGoals = false,

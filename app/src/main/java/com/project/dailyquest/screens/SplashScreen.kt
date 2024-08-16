@@ -36,11 +36,12 @@ fun SplashScreen(onSplashScreenFinish: () -> Unit = {}) {
         }
     }
     LaunchedEffect(key1 = true) {
+        val job = launch { delay(1000L) }
         scale.animateTo(
             targetValue = 1f,
             animationSpec = tween(durationMillis = 500)
         )
-        launch { delay(2000L) }
+        job.join()
         onSplashScreenFinish()
     }
 }

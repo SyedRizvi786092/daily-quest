@@ -5,7 +5,7 @@ import com.project.dailyquest.R
 data class NavBarItem(
     val text: String,
     val icon: Int,
-    val screen: AppScreens?
+    val route: String?
 )
 
 fun getAllNavBarItems(): List<NavBarItem> {
@@ -13,17 +13,17 @@ fun getAllNavBarItems(): List<NavBarItem> {
         NavBarItem(
             text = "Configure Goals",
             icon = R.drawable.target,
-            screen = AppScreens.GoalsScreen
+            route = AppScreens.GoalsScreen.name
         ),
         NavBarItem(
             text = "Today's Tasks",
             icon = R.drawable.task,
-            screen = null
+            route = null
         ),
         NavBarItem(
             text = "Monitor Sleep",
             icon = R.drawable.sleep,
-            screen = null
+            route = null
         )
     )
 }

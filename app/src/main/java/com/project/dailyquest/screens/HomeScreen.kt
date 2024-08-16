@@ -20,8 +20,7 @@ import com.project.dailyquest.widgets.DashboardContent
 @Composable
 fun HomeScreen(
     scaffoldPadding: PaddingValues = PaddingValues(),
-    goalCount: Int = getDummyGoals().count(),
-    onNavigateToGoals: () -> Unit = {}
+    goalCount: Int = getDummyGoals().count()
 ) {
     Column(modifier = Modifier
         .padding(scaffoldPadding)

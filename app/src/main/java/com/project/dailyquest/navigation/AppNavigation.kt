@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import com.project.dailyquest.screens.GoalsScreen
 import com.project.dailyquest.screens.GoalsViewModel
 import com.project.dailyquest.screens.HomeScreen
+import com.project.dailyquest.screens.MainViewModel
 import com.project.dailyquest.screens.SplashScreen
 
 @Composable
@@ -28,6 +29,8 @@ fun AppNavigation(
     var addGoals by remember {
         mutableStateOf(false)
     }
+    val mainViewModel = hiltViewModel<MainViewModel>()
+    val goalCount = mainViewModel.goalCount.collectAsStateWithLifecycle()
 
     NavHost(navController = navController, startDestination = startDestination) {
 
@@ -38,28 +41,26 @@ fun AppNavigation(
         }
 
         composable(route = AppScreens.HomeScreen.name) {
-            val viewModel = hiltViewModel<GoalsViewModel>()
-            val goalCount = viewModel.goalCount.collectAsStateWithLifecycle().value
             HomeScreen(
                 scaffoldPadding = scaffoldPadding,
-                goalCount = goalCount,
-                onNavigateToGoals = { navController.navigate(AppScreens.GoalsScreen.name) }
+                goalCount = goalCount.value
             )
         }
 
         composable(route = AppScreens.GoalsScreen.name) {
-            val viewModel = hiltViewModel<GoalsViewModel>()
-            val goals = viewModel.state.collectAsStateWithLifecycle().value
+            val goalsViewModel = hiltViewModel<GoalsViewModel>()
+            val goals = goalsViewModel.state.collectAsStateWithLifecycle()
             GoalsScreen(
                 scaffoldPadding = scaffoldPadding,
+                goalCount = goalCount.value,
                 viewGoals = viewGoals,
                 onToggleView = { viewGoals = !viewGoals },
                 addGoals = addGoals,
                 onToggleAdd = { addGoals = !addGoals },
-                goals = goals,
-                onDeleteGoal = { viewModel.deleteGoal(it) },
-                onAddGoal = { viewModel.addGoal(it) },
-                onEditGoal = { viewModel.editGoal(it) }
+                goals = goals.value,
+                onDeleteGoal = { goalsViewModel.deleteGoal(it) },
+                onAddGoal = { goalsViewModel.addGoal(it) },
+                onEditGoal = { goalsViewModel.editGoal(it) }
             )
         }
     }
