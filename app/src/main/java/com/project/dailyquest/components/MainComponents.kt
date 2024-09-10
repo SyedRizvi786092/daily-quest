@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.project.dailyquest.R
 import com.project.dailyquest.navigation.AppScreens
 import com.project.dailyquest.navigation.NavBarItem
 
@@ -75,7 +76,8 @@ fun BottomNavigationBar(
 fun TopApplicationBar(
     modifier: Modifier = Modifier,
     currentScreen: AppScreens,
-    navController: NavHostController
+    navController: NavHostController,
+    logOut: () -> Unit
 ) {
     val topAppBarColor = when(currentScreen) {
         AppScreens.HomeScreen -> MaterialTheme.colorScheme.tertiaryContainer
@@ -116,6 +118,13 @@ fun TopApplicationBar(
                     }
                 }) {
                     Icon(imageVector = Icons.Default.Home, contentDescription = "Home")
+                }
+            else
+                IconButton(onClick = logOut) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.logout_24dp),
+                        contentDescription = "Logout"
+                    )
                 }
         },
         colors = TopAppBarDefaults.topAppBarColors(

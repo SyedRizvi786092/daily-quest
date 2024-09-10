@@ -12,6 +12,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.google.firebase.auth.FirebaseUser
 import com.project.dailyquest.screens.goals.GoalsScreen
 import com.project.dailyquest.screens.goals.GoalsViewModel
 import com.project.dailyquest.screens.home.HomeScreen
@@ -23,8 +24,8 @@ import com.project.dailyquest.screens.login.LoginScreenViewModel
 @Composable
 fun AppNavigation(
     navController: NavHostController,
-    startDestination: String,
-    scaffoldPadding: PaddingValues
+    scaffoldPadding: PaddingValues,
+    user: FirebaseUser?
 ) {
     var viewGoals by remember {
         mutableStateOf(false)
@@ -35,25 +36,32 @@ fun AppNavigation(
     val mainViewModel = hiltViewModel<MainViewModel>()
     val goalCount = mainViewModel.goalCount.collectAsStateWithLifecycle()
 
-    NavHost(navController = navController, startDestination = startDestination) {
+    NavHost(navController = navController, startDestination = AppScreens.SplashScreen.name) {
 
         composable(route = AppScreens.SplashScreen.name) {
+            val route = if (user != null) AppScreens.HomeScreen.name else AppScreens.LoginScreen.name
             SplashScreen(
-                onSplashScreenFinish = { navController.navigate(AppScreens.LoginScreen.name) }
+                onSplashScreenFinish = { navController.navigate(route) {
+                    popUpTo(AppScreens.SplashScreen.name) { inclusive = true }
+                } }
             )
         }
 
         composable(route = AppScreens.LoginScreen.name) {
-            val loginViewModel: LoginScreenViewModel = viewModel()
+            val loginViewModel = viewModel<LoginScreenViewModel>()
             LoginScreen(
                 signIn = { email, password ->
                     loginViewModel.signIn(email, password,
-                        onSuccess = { navController.navigate(AppScreens.HomeScreen.name) }
+                        onSuccess = { navController.navigate(AppScreens.HomeScreen.name) {
+                            popUpTo(AppScreens.LoginScreen.name) { inclusive = true }
+                        } }
                     )
                 },
                 signUp = { email, password ->
                     loginViewModel.signUp(email, password,
-                        onSuccess = { navController.navigate(AppScreens.HomeScreen.name) }
+                        onSuccess = { navController.navigate(AppScreens.HomeScreen.name) {
+                            popUpTo(AppScreens.LoginScreen.name) { inclusive = true }
+                        } }
                     )
                 }
             )
@@ -61,6 +69,7 @@ fun AppNavigation(
 
         composable(route = AppScreens.HomeScreen.name) {
             HomeScreen(
+                user = user,
                 scaffoldPadding = scaffoldPadding,
                 goalCount = goalCount.value
             )

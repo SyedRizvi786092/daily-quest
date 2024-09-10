@@ -13,12 +13,14 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.auth.FirebaseUser
 import com.project.dailyquest.data.getDummyGoals
 import com.project.dailyquest.widgets.Dashboard
 
 @Preview(showBackground = true)
 @Composable
 fun HomeScreen(
+    user: FirebaseUser? = null,
     scaffoldPadding: PaddingValues = PaddingValues(),
     goalCount: Int = getDummyGoals().count()
 ) {

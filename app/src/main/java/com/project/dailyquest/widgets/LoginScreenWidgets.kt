@@ -22,6 +22,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.project.dailyquest.utils.checkEmailValidity
+import com.project.dailyquest.utils.checkPasswordValidity
 
 @Preview
 @Composable
@@ -32,6 +34,8 @@ fun UserForm(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val emailValidity by remember(email) { mutableStateOf(checkEmailValidity(email)) }
+    val passwordValidity by remember(password) { mutableStateOf(checkPasswordValidity(password)) }
     val passwordFocusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
     Surface(
@@ -48,6 +52,7 @@ fun UserForm(
                 text = email,
                 onTextChange = { email = it },
                 label = "Email",
+                isInvalid = !emailValidity,
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next,
                 onImeAction = { passwordFocusRequester.requestFocus() },
@@ -60,13 +65,19 @@ fun UserForm(
                 text = password,
                 onTextChange = { password = it },
                 label = "Password",
+                isInvalid = !passwordValidity,
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done,
-                onImeAction = { onDone(email, password)
-                    keyboardController?.hide() },
+                onImeAction = { keyboardController?.hide()
+                    onDone(email, password) },
                 color = MaterialTheme.colorScheme.surfaceContainerHigh
             )
-            Button(onClick = { onDone(email, password) }, modifier = Modifier.padding(8.dp)) {
+            Button(
+                onClick = { keyboardController?.hide()
+                    onDone(email, password) },
+                modifier = Modifier.padding(8.dp),
+                enabled = emailValidity && passwordValidity
+            ) {
                 Text(text = if (isNewUser) "Sign Up" else "Login")
             }
         }
