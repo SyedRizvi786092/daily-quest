@@ -8,14 +8,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.project.dailyquest.screens.GoalsScreen
-import com.project.dailyquest.screens.GoalsViewModel
-import com.project.dailyquest.screens.HomeScreen
-import com.project.dailyquest.screens.MainViewModel
+import com.project.dailyquest.screens.goals.GoalsScreen
+import com.project.dailyquest.screens.goals.GoalsViewModel
+import com.project.dailyquest.screens.home.HomeScreen
+import com.project.dailyquest.screens.home.MainViewModel
 import com.project.dailyquest.screens.SplashScreen
+import com.project.dailyquest.screens.login.LoginScreen
+import com.project.dailyquest.screens.login.LoginScreenViewModel
 
 @Composable
 fun AppNavigation(
@@ -36,7 +39,23 @@ fun AppNavigation(
 
         composable(route = AppScreens.SplashScreen.name) {
             SplashScreen(
-                onSplashScreenFinish = { navController.navigate(AppScreens.HomeScreen.name) }
+                onSplashScreenFinish = { navController.navigate(AppScreens.LoginScreen.name) }
+            )
+        }
+
+        composable(route = AppScreens.LoginScreen.name) {
+            val loginViewModel: LoginScreenViewModel = viewModel()
+            LoginScreen(
+                signIn = { email, password ->
+                    loginViewModel.signIn(email, password,
+                        onSuccess = { navController.navigate(AppScreens.HomeScreen.name) }
+                    )
+                },
+                signUp = { email, password ->
+                    loginViewModel.signUp(email, password,
+                        onSuccess = { navController.navigate(AppScreens.HomeScreen.name) }
+                    )
+                }
             )
         }
 

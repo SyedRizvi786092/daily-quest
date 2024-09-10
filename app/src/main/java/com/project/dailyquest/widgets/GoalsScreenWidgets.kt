@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -31,8 +29,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -111,28 +107,6 @@ fun ShowGoal(
             }
         }
     }
-}
-
-@Composable
-fun InputTextField(
-    modifier: Modifier = Modifier,
-    text: String,
-    onTextChange: (String) -> Unit,
-    label: String,
-    imeAction: ImeAction = ImeAction.Default,
-    onImeAction: () -> Unit = {},
-    maxLines: Int = 1,
-    color: Color = MaterialTheme.colorScheme.surfaceContainer
-) {
-    TextField(value = text, onValueChange = onTextChange,
-        modifier = modifier.padding(4.dp),
-        label = { Text(text = label) },
-        keyboardOptions = KeyboardOptions.Default.copy(imeAction = imeAction),
-        keyboardActions = KeyboardActions { onImeAction() },
-        maxLines = maxLines,
-        colors = TextFieldDefaults.colors().copy(focusedContainerColor = color,
-            unfocusedContainerColor = color)
-    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

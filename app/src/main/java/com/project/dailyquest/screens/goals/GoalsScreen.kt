@@ -1,4 +1,4 @@
-package com.project.dailyquest.screens
+package com.project.dailyquest.screens.goals
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
@@ -38,7 +38,7 @@ import com.project.dailyquest.R
 import com.project.dailyquest.data.Goal
 import com.project.dailyquest.data.getDummyGoals
 import com.project.dailyquest.widgets.DeleteConfirmationDialog
-import com.project.dailyquest.widgets.DisplayMainText
+import com.project.dailyquest.widgets.MainText
 import com.project.dailyquest.widgets.GoalDetailsTab
 import com.project.dailyquest.widgets.GoalTextFields
 import com.project.dailyquest.widgets.ShowDatePicker
@@ -75,7 +75,7 @@ fun GoalsScreen(
         horizontalAlignment = Alignment.CenterHorizontally) {
 
         // Displaying Current Active Goals
-        DisplayMainText(key = "Active Goals: ", value = "$goalCount", fontSize = 40.sp)
+        MainText(key = "Active Goals: ", value = "$goalCount", fontSize = 40.sp)
 
         Spacer(modifier = Modifier.height(12.dp))
 

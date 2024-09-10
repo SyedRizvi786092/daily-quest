@@ -12,12 +12,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.project.dailyquest.components.BottomNavigationBar
+import com.project.dailyquest.components.TopApplicationBar
 import com.project.dailyquest.navigation.AppNavigation
 import com.project.dailyquest.navigation.AppScreens
-import com.project.dailyquest.navigation.getAllNavBarItems
+import com.project.dailyquest.navigation.NavBarItem
 import com.project.dailyquest.ui.theme.DailyQuestTheme
-import com.project.dailyquest.widgets.BottomNavigationBar
-import com.project.dailyquest.widgets.TopApplicationBar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -44,15 +44,18 @@ fun AppContent() {
         )
     }
 
-    if (currentScreen == AppScreens.SplashScreen) {
-        AppNavigation(
+    when (currentScreen) {
+        AppScreens.SplashScreen -> AppNavigation(
             navController = navController,
             startDestination = AppScreens.SplashScreen.name,
             scaffoldPadding = PaddingValues()
         )
-    }
-    else {
-        Scaffold(
+        AppScreens.LoginScreen -> AppNavigation(
+            navController = navController,
+            startDestination = AppScreens.LoginScreen.name,
+            scaffoldPadding = PaddingValues()
+        )
+        else -> Scaffold(
             topBar = {
                 TopApplicationBar(
                     currentScreen = currentScreen,
@@ -60,7 +63,7 @@ fun AppContent() {
                 )
             },
             bottomBar = { BottomNavigationBar(
-                items = getAllNavBarItems(),
+                items = NavBarItem.getAllNavBarItems(),
                 currentScreen = currentScreen,
                 onNavigateToScreen = { screenRoute ->
                     if (screenRoute != null) {

@@ -1,4 +1,4 @@
-package com.project.dailyquest.screens
+package com.project.dailyquest.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

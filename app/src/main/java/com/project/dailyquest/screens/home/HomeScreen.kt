@@ -1,4 +1,4 @@
-package com.project.dailyquest.screens
+package com.project.dailyquest.screens.home
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.dailyquest.data.getDummyGoals
-import com.project.dailyquest.widgets.DashboardContent
+import com.project.dailyquest.widgets.Dashboard
 
 @Preview(showBackground = true)
 @Composable
@@ -32,6 +32,6 @@ fun HomeScreen(
             style = LocalTextStyle.current.copy(fontSize = 40.sp,
                 fontFamily = FontFamily.Serif)
         )
-        DashboardContent(goalCount = goalCount)
+        Dashboard(goalCount = goalCount)
     }
 }
