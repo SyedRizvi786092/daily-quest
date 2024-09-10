@@ -32,8 +32,8 @@ fun UserForm(
     isNewUser: Boolean = false,
     onDone: (String, String) -> Unit = { _, _ -> }
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var email by remember(isNewUser) { mutableStateOf("") }
+    var password by remember(isNewUser) { mutableStateOf("") }
     val emailValidity by remember(email) { mutableStateOf(checkEmailValidity(email)) }
     val passwordValidity by remember(password) { mutableStateOf(checkPasswordValidity(password)) }
     val passwordFocusRequester = remember { FocusRequester() }
@@ -69,7 +69,7 @@ fun UserForm(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done,
                 onImeAction = { keyboardController?.hide()
-                    onDone(email, password) },
+                    if (emailValidity && passwordValidity) onDone(email, password) },
                 color = MaterialTheme.colorScheme.surfaceContainerHigh
             )
             Button(

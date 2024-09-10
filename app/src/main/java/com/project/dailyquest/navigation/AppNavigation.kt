@@ -49,7 +49,9 @@ fun AppNavigation(
 
         composable(route = AppScreens.LoginScreen.name) {
             val loginViewModel = viewModel<LoginScreenViewModel>()
+            val authState = loginViewModel.authState.collectAsStateWithLifecycle()
             LoginScreen(
+                authState = authState.value,
                 signIn = { email, password ->
                     loginViewModel.signIn(email, password,
                         onSuccess = { navController.navigate(AppScreens.HomeScreen.name) {
