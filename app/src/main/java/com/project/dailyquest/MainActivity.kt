@@ -9,25 +9,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.project.dailyquest.components.BottomNavigationBar
 import com.project.dailyquest.components.TopApplicationBar
 import com.project.dailyquest.navigation.AppNavigation
 import com.project.dailyquest.navigation.AppScreens
 import com.project.dailyquest.navigation.NavBarItem
 import com.project.dailyquest.ui.theme.DailyQuestTheme
+import com.project.dailyquest.widgets.ConfirmationDialog
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private lateinit var auth: FirebaseAuth
+    @Inject lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        auth = Firebase.auth
         enableEdgeToEdge()
         setContent {
             DailyQuestTheme {
@@ -47,6 +47,7 @@ fun AppContent(auth: FirebaseAuth) {
                 ?: AppScreens.SplashScreen
         )
     }
+    var showLogoutDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = { when(currentScreen) {
@@ -54,10 +55,8 @@ fun AppContent(auth: FirebaseAuth) {
             else -> { TopApplicationBar(
                 currentScreen = currentScreen,
                 navController = navController,
-                logOut = { auth.signOut()
-                navController.navigate(AppScreens.LoginScreen.name) {
-                    popUpTo(AppScreens.HomeScreen.name) { inclusive = true }
-                } }
+                userName = auth.currentUser?.displayName,
+                logOut = { showLogoutDialog = true }
             ) }
         } },
         bottomBar = { when(currentScreen) {
@@ -76,4 +75,18 @@ fun AppContent(auth: FirebaseAuth) {
             user = auth.currentUser
         )
     }
+
+    if (showLogoutDialog)
+        ConfirmationDialog(
+            action = "Logout",
+            msg = "Are you sure you want to logout?",
+            onConfirm = {
+                auth.signOut()
+                showLogoutDialog = false
+                navController.navigate(AppScreens.LoginScreen.name) {
+                    popUpTo(AppScreens.HomeScreen.name) { inclusive = true }
+                }
+            },
+            onDismiss = { showLogoutDialog = false }
+        )
 }

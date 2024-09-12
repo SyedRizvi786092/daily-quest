@@ -17,11 +17,11 @@ import com.google.firebase.auth.FirebaseUser
 import com.project.dailyquest.data.getDummyGoals
 import com.project.dailyquest.widgets.Dashboard
 
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
 fun HomeScreen(
-    user: FirebaseUser? = null,
     scaffoldPadding: PaddingValues = PaddingValues(),
+    user: FirebaseUser,
     goalCount: Int = getDummyGoals().count()
 ) {
     Column(modifier = Modifier
@@ -29,10 +29,13 @@ fun HomeScreen(
         .padding(16.dp)
         .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "Hello, User!",
+        Text(text = if (user.displayName != null) "Hello, ${user.displayName}!" else "Hey there!",
             modifier = Modifier.padding(16.dp),
-            style = LocalTextStyle.current.copy(fontSize = 40.sp,
-                fontFamily = FontFamily.Serif)
+            style = LocalTextStyle.current.copy(
+                fontSize = 32.sp,
+                fontFamily = FontFamily.Serif,
+                lineHeight = 40.sp
+            )
         )
         Dashboard(goalCount = goalCount)
     }

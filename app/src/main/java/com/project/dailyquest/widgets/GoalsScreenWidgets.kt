@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -43,7 +41,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -310,22 +307,4 @@ fun GoalDetailsTab(
             initialDate = goalDeadline,
             onDateSelected = { goalDeadline = it },
             onDismiss = { deadlinePicker = false })
-}
-
-@Preview
-@Composable
-fun DeleteConfirmationDialog(onConfirm: () -> Unit = {}, onDismiss: () -> Unit = {}) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = { TextButton(onClick = onConfirm) {
-            Text(text = "Yes")
-        } },
-        dismissButton = { TextButton(onClick = onDismiss) {
-            Text(text = "Cancel")
-        } },
-        icon = { Icon(imageVector = Icons.Filled.Warning, contentDescription = "Warning") },
-        title = { Text(text = "Confirm Delete") },
-        text = { Text(text = "Are you sure you want to delete this goal?") },
-        iconContentColor = Color(0xFFFFA000)
-    )
 }

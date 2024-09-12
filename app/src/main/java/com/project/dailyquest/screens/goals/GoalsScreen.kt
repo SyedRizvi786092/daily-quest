@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.sp
 import com.project.dailyquest.R
 import com.project.dailyquest.data.Goal
 import com.project.dailyquest.data.getDummyGoals
-import com.project.dailyquest.widgets.DeleteConfirmationDialog
+import com.project.dailyquest.widgets.ConfirmationDialog
 import com.project.dailyquest.widgets.MainText
 import com.project.dailyquest.widgets.GoalDetailsTab
 import com.project.dailyquest.widgets.GoalTextFields
@@ -75,7 +75,7 @@ fun GoalsScreen(
         horizontalAlignment = Alignment.CenterHorizontally) {
 
         // Displaying Current Active Goals
-        MainText(key = "Active Goals: ", value = "$goalCount", fontSize = 40.sp)
+        MainText(key = "Active Goals: ", value = "$goalCount", fontSize = 36.sp)
 
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -192,7 +192,8 @@ fun GoalsScreen(
 
     // Show confirmation dialog when user tries to delete a goal
     if (showDeleteDialog && selectedGoal != null)
-        DeleteConfirmationDialog(
+        ConfirmationDialog(
+            msg = "Are you sure you want to delete this goal?",
             onConfirm = { onDeleteGoal(selectedGoal!!)
                 selectedGoal = null
                 showDeleteDialog = false },

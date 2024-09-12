@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -77,6 +78,7 @@ fun TopApplicationBar(
     modifier: Modifier = Modifier,
     currentScreen: AppScreens,
     navController: NavHostController,
+    userName: String?,
     logOut: () -> Unit
 ) {
     val topAppBarColor = when(currentScreen) {
@@ -92,6 +94,7 @@ fun TopApplicationBar(
             ) {
                 Text(
                     text = when (currentScreen) {
+                        AppScreens.ProfileScreen -> if (userName == null) "Welcome" else "Profile"
                         AppScreens.HomeScreen -> "Dashboard"
                         AppScreens.GoalsScreen -> "Goals"
                         else -> ""
@@ -102,30 +105,37 @@ fun TopApplicationBar(
         },
         modifier = modifier,
         navigationIcon = {
-            if (currentScreen != AppScreens.HomeScreen)
-                IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back"
-                    )
+            when(currentScreen) {
+                AppScreens.HomeScreen -> 
+                    IconButton(onClick = { navController.navigate(AppScreens.ProfileScreen.name) }) {
+                        Icon(imageVector = Icons.Default.Person, contentDescription = "Profile")
                 }
+                else -> if (currentScreen != AppScreens.ProfileScreen || userName != null)
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+            }
         },
         actions = {
-            if (currentScreen != AppScreens.HomeScreen)
-                IconButton(onClick = {
+            when(currentScreen) {
+                AppScreens.ProfileScreen -> {}
+                AppScreens.HomeScreen -> IconButton(onClick = logOut) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.logout_24dp),
+                        contentDescription = "Logout"
+                    )
+                }
+                else -> IconButton(onClick = {
                     navController.navigate(AppScreens.HomeScreen.name) {
                         popUpTo(AppScreens.HomeScreen.name) { inclusive = true }
                     }
                 }) {
                     Icon(imageVector = Icons.Default.Home, contentDescription = "Home")
                 }
-            else
-                IconButton(onClick = logOut) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.logout_24dp),
-                        contentDescription = "Logout"
-                    )
-                }
+            }
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = topAppBarColor,

@@ -3,23 +3,24 @@ package com.project.dailyquest.screens.login
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.project.dailyquest.model.AuthState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 private const val TAG = "FB"
 
-class LoginScreenViewModel: ViewModel() {
-    private val auth = Firebase.auth
+@HiltViewModel
+class LoginViewModel @Inject constructor(private val auth: FirebaseAuth): ViewModel() {
     private val _authState = MutableStateFlow(AuthState())
     val authState = _authState.asStateFlow()
 
     fun signIn(email: String, password: String, onSuccess: () -> Unit) {
+        _authState.value = AuthState(status = AuthState.Status.LOADING, msg = "Letting you in!")
         viewModelScope.launch {
-            _authState.value = AuthState(status = AuthState.Status.LOADING, msg = "Letting you in!")
             try {
                 auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
@@ -41,8 +42,8 @@ class LoginScreenViewModel: ViewModel() {
     }
 
     fun signUp(email: String, password: String, onSuccess: () -> Unit) {
+        _authState.value = AuthState(status = AuthState.Status.LOADING, msg = "Please wait!")
         viewModelScope.launch {
-            _authState.value = AuthState(status = AuthState.Status.LOADING, msg = "Please wait!")
             try {
                 auth.createUserWithEmailAndPassword(email, password)
                     .addOnSuccessListener { task ->

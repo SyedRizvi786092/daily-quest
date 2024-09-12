@@ -8,18 +8,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.firebase.auth.FirebaseUser
+import com.project.dailyquest.screens.SplashScreen
 import com.project.dailyquest.screens.goals.GoalsScreen
 import com.project.dailyquest.screens.goals.GoalsViewModel
 import com.project.dailyquest.screens.home.HomeScreen
 import com.project.dailyquest.screens.home.MainViewModel
-import com.project.dailyquest.screens.SplashScreen
 import com.project.dailyquest.screens.login.LoginScreen
-import com.project.dailyquest.screens.login.LoginScreenViewModel
+import com.project.dailyquest.screens.login.LoginViewModel
+import com.project.dailyquest.screens.profile.ProfileScreen
+import com.project.dailyquest.screens.profile.ProfileViewModel
 
 @Composable
 fun AppNavigation(
@@ -48,7 +49,7 @@ fun AppNavigation(
         }
 
         composable(route = AppScreens.LoginScreen.name) {
-            val loginViewModel = viewModel<LoginScreenViewModel>()
+            val loginViewModel = hiltViewModel<LoginViewModel>()
             val authState = loginViewModel.authState.collectAsStateWithLifecycle()
             LoginScreen(
                 authState = authState.value,
@@ -61,8 +62,27 @@ fun AppNavigation(
                 },
                 signUp = { email, password ->
                     loginViewModel.signUp(email, password,
-                        onSuccess = { navController.navigate(AppScreens.HomeScreen.name) {
+                        onSuccess = { navController.navigate(AppScreens.ProfileScreen.name) {
                             popUpTo(AppScreens.LoginScreen.name) { inclusive = true }
+                        } }
+                    )
+                }
+            )
+        }
+        
+        composable(route = AppScreens.ProfileScreen.name) {
+            val profileViewModel = hiltViewModel<ProfileViewModel>()
+            val authState = profileViewModel.authState.collectAsStateWithLifecycle()
+            ProfileScreen(
+                scaffoldPadding = scaffoldPadding,
+                authState = authState.value,
+                user = user!!,
+                onAddName = { newName ->
+                    profileViewModel.addNewName(
+                        name = newName,
+                        onSuccess = { navController.navigate(AppScreens.HomeScreen.name) {
+                            popUpTo(AppScreens.ProfileScreen.name) { inclusive = true }
+                            launchSingleTop = true
                         } }
                     )
                 }
@@ -71,8 +91,8 @@ fun AppNavigation(
 
         composable(route = AppScreens.HomeScreen.name) {
             HomeScreen(
-                user = user,
                 scaffoldPadding = scaffoldPadding,
+                user = user!!,
                 goalCount = goalCount.value
             )
         }

@@ -2,6 +2,9 @@ package com.project.dailyquest.di
 
 import android.content.Context
 import androidx.room.Room
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.project.dailyquest.data.AppDatabase
 import com.project.dailyquest.data.GoalDao
 import dagger.Module
@@ -30,4 +33,8 @@ object AppModule {
             "goals_db"
         ).build()
     }
+
+    @Singleton
+    @Provides
+    fun provideFirebaseAuth(): FirebaseAuth = Firebase.auth
 }
