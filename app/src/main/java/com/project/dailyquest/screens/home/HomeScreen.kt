@@ -29,7 +29,7 @@ fun HomeScreen(
         .padding(16.dp)
         .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = if (user.displayName != null) "Hello, ${user.displayName}!" else "Hey there!",
+        Text(text = if (user.displayName.isNullOrEmpty()) "Hey there!" else "Hello, ${user.displayName}!",
             modifier = Modifier.padding(16.dp),
             style = LocalTextStyle.current.copy(
                 fontSize = 32.sp,

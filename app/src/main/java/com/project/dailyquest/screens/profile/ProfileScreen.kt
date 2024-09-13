@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Button
@@ -19,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,7 +46,8 @@ fun ProfileScreen(
     scaffoldPadding: PaddingValues = PaddingValues(),
     authState: AuthState = AuthState(),
     user: FirebaseUser,
-    onAddName: (String) -> Unit = {}
+    onAddName: (String) -> Unit = {},
+    onSkip: () -> Unit = {}
 ) {
     var name by remember { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -53,7 +57,9 @@ fun ProfileScreen(
         .padding(scaffoldPadding),
         color = MaterialTheme.colorScheme.surfaceContainerHighest) {
         if (user.displayName == null) {
-            Column(modifier = Modifier.padding(12.dp),
+            Column(modifier = Modifier
+                .padding(12.dp)
+                .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center) {
                 Text(text = "Let's get you started!",
@@ -95,6 +101,12 @@ fun ProfileScreen(
                 }
                 Spacer(modifier = Modifier.height(4.dp))
                 if (authState.status == AuthState.Status.LOADING) CircularProgressIndicator()
+                else TextButton(onClick = onSkip,
+                    modifier = Modifier
+                        .padding(end = 24.dp).
+                        align(Alignment.End)) {
+                    Text(text = "Skip")
+                }
             }
         } else {
             Box(modifier = Modifier.fillMaxSize(),

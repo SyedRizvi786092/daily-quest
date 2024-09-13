@@ -3,60 +3,61 @@ package com.project.dailyquest.screens.login
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
 import com.project.dailyquest.model.AuthState
+import com.project.dailyquest.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private const val TAG = "FB"
-
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val auth: FirebaseAuth): ViewModel() {
+class LoginViewModel @Inject constructor(private val repository: UserRepository): ViewModel() {
     private val _authState = MutableStateFlow(AuthState())
     val authState = _authState.asStateFlow()
 
-    fun signIn(email: String, password: String, onSuccess: () -> Unit) {
-        _authState.value = AuthState(status = AuthState.Status.LOADING, msg = "Letting you in!")
+    fun login(email: String, password: String, onSuccess: () -> Unit) {
+        _authState.value = AuthState.loading(msg = "Letting you in!")
         viewModelScope.launch {
             try {
-                auth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            _authState.value = AuthState(AuthState.Status.COMPLETE, "Welcome Back!")
-                            onSuccess()
-                        }
-                        else {
-                            _authState.value = AuthState()
-                            // ${task.result} throws an exception that isn't caught
-                            Log.d(TAG, "signIn: ${task.exception}")
-                        }
-                    }
+                repository.signIn(
+                    email = email,
+                    password = password,
+                    onSuccess = {
+                        _authState.value = AuthState.success(msg = "Welcome Back!")
+                        onSuccess()
+                    },
+                    onError = { _authState.value = AuthState.error(
+                        exception = it,
+                        msg = "Something went wrong!"
+                    ) }
+                )
             } catch (exc: Exception) {
-                _authState.value = AuthState()
-                Log.d(TAG, "signIn: Exception, msg: ${exc.message}")
+                _authState.value = AuthState.error(exception = exc, msg = "Something went wrong!")
+                Log.d("VM", "login: Exception, msg: ${exc.message}")
             }
         }
     }
 
     fun signUp(email: String, password: String, onSuccess: () -> Unit) {
-        _authState.value = AuthState(status = AuthState.Status.LOADING, msg = "Please wait!")
+        _authState.value = AuthState.loading(msg = "Please wait!")
         viewModelScope.launch {
             try {
-                auth.createUserWithEmailAndPassword(email, password)
-                    .addOnSuccessListener { task ->
-                        _authState.value = AuthState(AuthState.Status.COMPLETE, "Welcome!")
-                        Log.d(TAG, "signUp: New user created, id: ${task.user?.uid}")
+                repository.createNewUser(
+                    email = email,
+                    password = password,
+                    onSuccess = {
+                        _authState.value = AuthState.success(msg = "Welcome onboard!")
                         onSuccess()
-                    }.addOnFailureListener { exception ->
-                        _authState.value = AuthState()
-                        Log.d(TAG, "signUp: Exception, msg: ${exception.message}")
-                    }
+                    },
+                    onError = { _authState.value = AuthState.error(
+                        exception = it,
+                        msg = "Something went wrong!"
+                    ) }
+                )
             } catch (exc: Exception) {
-                _authState.value = AuthState()
-                Log.d(TAG, "signUp: Exception, msg: ${exc.message}")
+                _authState.value = AuthState.error(exception = exc, msg = "Something went wrong!")
+                Log.d("VM", "signUp: Exception, msg: ${exc.message}")
             }
         }
     }

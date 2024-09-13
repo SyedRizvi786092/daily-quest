@@ -54,7 +54,7 @@ fun AppNavigation(
             LoginScreen(
                 authState = authState.value,
                 signIn = { email, password ->
-                    loginViewModel.signIn(email, password,
+                    loginViewModel.login(email, password,
                         onSuccess = { navController.navigate(AppScreens.HomeScreen.name) {
                             popUpTo(AppScreens.LoginScreen.name) { inclusive = true }
                         } }
@@ -85,7 +85,11 @@ fun AppNavigation(
                             launchSingleTop = true
                         } }
                     )
-                }
+                },
+                onSkip = { navController.navigate(AppScreens.HomeScreen.name) {
+                    popUpTo(AppScreens.ProfileScreen.name) { inclusive = true }
+                    launchSingleTop = true
+                } }
             )
         }
 

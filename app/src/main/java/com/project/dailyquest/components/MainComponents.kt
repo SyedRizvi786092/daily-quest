@@ -1,8 +1,5 @@
 package com.project.dailyquest.components
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
@@ -88,20 +85,15 @@ fun TopApplicationBar(
     }
     TopAppBar(
         title = {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = when (currentScreen) {
-                        AppScreens.ProfileScreen -> if (userName == null) "Welcome" else "Profile"
-                        AppScreens.HomeScreen -> "Dashboard"
-                        AppScreens.GoalsScreen -> "Goals"
-                        else -> ""
-                    },
-                    style = LocalTextStyle.current.copy(fontWeight = FontWeight.Bold)
-                )
-            }
+            Text(
+                text = when (currentScreen) {
+                    AppScreens.ProfileScreen -> if (userName == null) "Welcome" else "Profile"
+                    AppScreens.HomeScreen -> "Dashboard"
+                    AppScreens.GoalsScreen -> "Goals"
+                    else -> ""
+                },
+                style = LocalTextStyle.current.copy(fontWeight = FontWeight.Bold)
+            )
         },
         modifier = modifier,
         navigationIcon = {
@@ -139,6 +131,7 @@ fun TopApplicationBar(
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = topAppBarColor,
+            navigationIconContentColor = contentColorFor(backgroundColor = topAppBarColor),
             titleContentColor = contentColorFor(backgroundColor = topAppBarColor)
         )
     )
