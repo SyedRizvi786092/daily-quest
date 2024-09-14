@@ -5,7 +5,10 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -16,34 +19,52 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.project.dailyquest.R
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.project.dailyquest.model.AuthState
 
 @Preview(showBackground = true)
 @Composable
-fun SplashScreen(onSplashScreenFinish: () -> Unit = {}) {
+fun SplashScreen(authState: AuthState = AuthState(), onSplashScreenFinish: () -> Unit = {}) {
     val scale = remember {
         Animatable(0f)
     }
-    Box(modifier = Modifier.fillMaxSize()
-        .background(brush = Brush.linearGradient(
-            listOf(Color.White, Color.LightGray, Color.Gray, Color.DarkGray)
-        )),
-        contentAlignment = Alignment.Center) {
-        Image(
-            painter = painterResource(id = R.drawable.app_logo),
-            contentDescription = "App Logo",
-            modifier = Modifier.scale(scale.value)
-        )
+
+    LaunchedEffect(key1 = authState) {
+        when (val status = authState.status) {
+            is AuthState.Status.COMPLETE -> {
+                when (status.result) {
+                    is AuthState.Status.COMPLETE.Result.SUCCESS -> onSplashScreenFinish()
+                    else -> {}
+                }
+            }
+            else -> {}
+        }
     }
+
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(
+            brush = Brush.linearGradient(
+                listOf(Color.White, Color.LightGray, Color.Gray, Color.DarkGray)
+            )
+        ),
+        contentAlignment = Alignment.Center) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Image(
+                painter = painterResource(id = R.drawable.app_logo),
+                contentDescription = "App Logo",
+                modifier = Modifier.scale(scale.value)
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+//            if (authState.status is AuthState.Status.LOADING) CircularProgressIndicator()
+        }
+    }
+
     LaunchedEffect(key1 = true) {
-        val job = launch { delay(1000L) }
         scale.animateTo(
             targetValue = 1f,
             animationSpec = tween(durationMillis = 500)
         )
-        job.join()
-        onSplashScreenFinish()
     }
 }

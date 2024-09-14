@@ -44,7 +44,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.project.dailyquest.data.Goal
+import com.project.dailyquest.model.Goal
 import com.project.dailyquest.utils.getDecoratedDeadline
 import com.project.dailyquest.utils.getRemainingDays
 import kotlinx.datetime.Clock
@@ -290,10 +290,12 @@ fun GoalDetailsTab(
                             Text(text = "Cancel")
                         }
                     TextButton(onClick = { if (editable)
-                        onEdited(Goal(id = goal.id,
+                        onEdited(
+                            Goal(id = goal.id,
                             title = goalTitle,
                             description = goalDescription?.ifBlank { null },
-                            deadline = goalDeadline))
+                            deadline = goalDeadline)
+                        )
                         onDismiss() }
                     ) {
                         Text(text = if (editable) "Save" else "OK")

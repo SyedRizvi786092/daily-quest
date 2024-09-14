@@ -1,6 +1,6 @@
 package com.project.dailyquest.repository
 
-import com.project.dailyquest.data.Goal
+import com.project.dailyquest.model.Goal
 import com.project.dailyquest.data.GoalDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

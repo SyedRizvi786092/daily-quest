@@ -2,8 +2,7 @@ package com.project.dailyquest.screens.goals
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.project.dailyquest.data.Goal
-import com.project.dailyquest.data.getDummyGoals
+import com.project.dailyquest.model.Goal
 import com.project.dailyquest.repository.GoalsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GoalsViewModel @Inject constructor(private val repository: GoalsRepository): ViewModel() {
-    private val _state = MutableStateFlow(getDummyGoals())
+    private val _state = MutableStateFlow(Goal.getDummyGoals())
     val state: StateFlow<List<Goal>> = _state
 
     init {
@@ -23,7 +22,7 @@ class GoalsViewModel @Inject constructor(private val repository: GoalsRepository
         }
     }
 
-    fun deleteGoal(goal: Goal) = viewModelScope.launch { repository.deleteGoal(goal) }
-    fun addGoal(goal: Goal) = viewModelScope.launch { repository.insertGoal(goal) }
-    fun editGoal(goal: Goal) = viewModelScope.launch { repository.updateGoal(goal) }
+    fun deleteGoal(goal: Goal) = viewModelScope.launch(Dispatchers.IO) { repository.deleteGoal(goal) }
+    fun addGoal(goal: Goal) = viewModelScope.launch(Dispatchers.IO) { repository.insertGoal(goal) }
+    fun editGoal(goal: Goal) = viewModelScope.launch(Dispatchers.IO) { repository.updateGoal(goal) }
 }

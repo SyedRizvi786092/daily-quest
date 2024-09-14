@@ -36,12 +36,14 @@ fun AppNavigation(
     }
     val mainViewModel = hiltViewModel<MainViewModel>()
     val goalCount = mainViewModel.goalCount.collectAsStateWithLifecycle()
+    val userDataRefreshState = mainViewModel.authState.collectAsStateWithLifecycle()
 
     NavHost(navController = navController, startDestination = AppScreens.SplashScreen.name) {
 
         composable(route = AppScreens.SplashScreen.name) {
             val route = if (user != null) AppScreens.HomeScreen.name else AppScreens.LoginScreen.name
             SplashScreen(
+                authState = userDataRefreshState.value,
                 onSplashScreenFinish = { navController.navigate(route) {
                     popUpTo(AppScreens.SplashScreen.name) { inclusive = true }
                 } }

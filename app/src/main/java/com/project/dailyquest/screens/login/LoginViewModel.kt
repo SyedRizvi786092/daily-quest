@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.project.dailyquest.model.AuthState
 import com.project.dailyquest.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -18,7 +19,7 @@ class LoginViewModel @Inject constructor(private val repository: UserRepository)
 
     fun login(email: String, password: String, onSuccess: () -> Unit) {
         _authState.value = AuthState.loading(msg = "Letting you in!")
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 repository.signIn(
                     email = email,
@@ -41,7 +42,7 @@ class LoginViewModel @Inject constructor(private val repository: UserRepository)
 
     fun signUp(email: String, password: String, onSuccess: () -> Unit) {
         _authState.value = AuthState.loading(msg = "Please wait!")
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 repository.createNewUser(
                     email = email,

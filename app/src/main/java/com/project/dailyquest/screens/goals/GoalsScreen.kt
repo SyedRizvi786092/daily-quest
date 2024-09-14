@@ -35,8 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.dailyquest.R
-import com.project.dailyquest.data.Goal
-import com.project.dailyquest.data.getDummyGoals
+import com.project.dailyquest.model.Goal
 import com.project.dailyquest.widgets.ConfirmationDialog
 import com.project.dailyquest.widgets.MainText
 import com.project.dailyquest.widgets.GoalDetailsTab
@@ -155,10 +154,12 @@ fun GoalsScreen(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 // Save Goal Button
-                Button(onClick = { onAddGoal(Goal(id = UUID.randomUUID(),
+                Button(onClick = { onAddGoal(
+                    Goal(id = UUID.randomUUID(),
                     title = title,
                     description = description.ifBlank { null },
-                    deadline = deadline))
+                    deadline = deadline)
+                )
                     Toast.makeText(context, "Goal Added!", Toast.LENGTH_SHORT).show()
                     title = ""
                     description = ""
@@ -212,7 +213,7 @@ fun GoalsScreenPreview() {
         onToggleView = {},
         addGoals = false,
         onToggleAdd = {},
-        goals = getDummyGoals(),
+        goals = Goal.getDummyGoals(),
         onDeleteGoal = {},
         onAddGoal = {},
         onEditGoal = {}

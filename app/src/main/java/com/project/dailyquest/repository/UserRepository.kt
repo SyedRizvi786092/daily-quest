@@ -9,6 +9,17 @@ private const val TAG = "FB"
 
 class UserRepository @Inject constructor(private val auth: FirebaseAuth) {
 
+    fun refreshUserData(onSuccess: () -> Unit, onError: (Exception) -> Unit) {
+        val user = auth.currentUser
+        user?.reload()?.addOnCompleteListener { task ->
+            if (task.isSuccessful) onSuccess()
+            else {
+                Log.d(TAG, "refreshUserData: ${task.exception}")
+                onError(Exception(task.exception))
+            }
+        }
+    }
+
     fun signIn(
         email: String,
         password: String,

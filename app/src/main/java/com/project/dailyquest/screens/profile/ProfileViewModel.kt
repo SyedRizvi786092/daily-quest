@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.project.dailyquest.model.AuthState
 import com.project.dailyquest.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -17,7 +18,7 @@ class ProfileViewModel @Inject constructor(private val repository: UserRepositor
 
     fun addNewName(name: String, onSuccess: () -> Unit) {
         _authState.value = AuthState(status = AuthState.Status.LOADING, msg = "Please wait!")
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.addName(
                 name = name,
                 onSuccess = {

@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.auth.FirebaseUser
-import com.project.dailyquest.data.getDummyGoals
+import com.project.dailyquest.model.Goal
 import com.project.dailyquest.widgets.Dashboard
 
 //@Preview(showBackground = true)
@@ -22,7 +22,7 @@ import com.project.dailyquest.widgets.Dashboard
 fun HomeScreen(
     scaffoldPadding: PaddingValues = PaddingValues(),
     user: FirebaseUser,
-    goalCount: Int = getDummyGoals().count()
+    goalCount: Int = Goal.getDummyGoals().count()
 ) {
     Column(modifier = Modifier
         .padding(scaffoldPadding)
