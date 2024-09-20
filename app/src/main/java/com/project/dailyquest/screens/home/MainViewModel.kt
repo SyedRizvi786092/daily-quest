@@ -28,22 +28,24 @@ class MainViewModel @Inject constructor(
     val goalCount = _goalCount.asStateFlow()
 
     init {
-        _authState.value = AuthState.loading()
-        viewModelScope.launch(Dispatchers.IO) {
-            userRepository.refreshUserData(
-                onSuccess = { _authState.value = AuthState.success() },
-                onError = { exc ->
-                    Log.d("FB", "Exception while loading user data: ${exc.message}")
-                    _authState.value = AuthState.error(
-                        exception = exc,
-                        msg = "Unable to fetch latest data! Please check your internet connection."
-                    )
-                }
-            )
-        }
-
         viewModelScope.launch(Dispatchers.IO) {
             goalsRepository.countGoals().distinctUntilChanged().collect { _goalCount.value = it }
+        }
+    }
+
+    fun refreshUserData() {
+        _authState.value = AuthState.loading()
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                userRepository.refreshUserData()
+                _authState.value = AuthState.success()
+            } catch (exc: Exception) {
+                Log.d("FB", "Exception while loading user data: ${exc.message}")
+                _authState.value = AuthState.error(
+                    exception = exc,
+                    msg = "Unable to fetch latest data! Please check your internet connection."
+                )
+            }
         }
     }
 }

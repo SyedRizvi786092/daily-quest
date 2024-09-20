@@ -1,5 +1,6 @@
 package com.project.dailyquest.screens
 
+import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -11,7 +12,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -25,20 +29,26 @@ import com.project.dailyquest.model.AuthState
 
 @Preview(showBackground = true)
 @Composable
-fun SplashScreen(authState: AuthState = AuthState(), onSplashScreenFinish: () -> Unit = {}) {
-    val scale = remember {
-        Animatable(0f)
-    }
+fun SplashScreen(
+    userDataRefreshState: AuthState = AuthState(),
+    onSplashScreenFinish: () -> Unit = {}
+) {
+    val scale = remember { Animatable(0f) }
+    var hasAnimated by remember { mutableStateOf(false) }
 
-    LaunchedEffect(key1 = authState) {
-        when (val status = authState.status) {
-            is AuthState.Status.COMPLETE -> {
-                when (status.result) {
-                    is AuthState.Status.COMPLETE.Result.SUCCESS -> onSplashScreenFinish()
-                    else -> {}
+    // Navigation Effect
+    LaunchedEffect(key1 = userDataRefreshState, key2 = hasAnimated) {
+        if (hasAnimated) {
+            when (val status = userDataRefreshState.status) {
+                is AuthState.Status.LOADING -> {/* Wait for completion */}
+                is AuthState.Status.IDLE -> onSplashScreenFinish()
+                is AuthState.Status.COMPLETE -> {
+                    when (status.result) {
+                        is AuthState.Status.COMPLETE.Result.SUCCESS -> onSplashScreenFinish()
+                        is AuthState.Status.COMPLETE.Result.ERROR -> {/* todo */}
+                    }
                 }
             }
-            else -> {}
         }
     }
 
@@ -56,15 +66,18 @@ fun SplashScreen(authState: AuthState = AuthState(), onSplashScreenFinish: () ->
                 contentDescription = "App Logo",
                 modifier = Modifier.scale(scale.value)
             )
-            Spacer(modifier = Modifier.height(24.dp))
+//            Spacer(modifier = Modifier.height(24.dp))
 //            if (authState.status is AuthState.Status.LOADING) CircularProgressIndicator()
+//            Log.d("Splash", "SplashScreen: $userDataRefreshState")
         }
     }
 
+    // Animation Effect
     LaunchedEffect(key1 = true) {
         scale.animateTo(
-            targetValue = 1f,
+            targetValue = 0.8f,
             animationSpec = tween(durationMillis = 500)
         )
+        hasAnimated = true
     }
 }

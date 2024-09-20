@@ -36,7 +36,7 @@ import com.project.dailyquest.widgets.UserForm
 @Preview
 @Composable
 fun LoginScreen(
-    authState: AuthState = AuthState(),
+    loginLoadingState: AuthState = AuthState(),
     signIn: (String, String) -> Unit = { _, _ -> },
     signUp: (String, String) -> Unit = { _, _ -> }
 ) {
@@ -74,12 +74,12 @@ fun LoginScreen(
             )
 
             // Loading Indicator
-            if (authState.status == AuthState.Status.LOADING) {
+            if (loginLoadingState.status == AuthState.Status.LOADING) {
                 Column(modifier = Modifier.padding(8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally) {
                     CircularProgressIndicator()
                     Spacer(modifier = Modifier.height(2.dp))
-                    authState.msg?.let {
+                    loginLoadingState.msg?.let {
                         Text(text = it, fontSize = 12.sp)
                     }
                 }

@@ -33,7 +33,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.auth.FirebaseUser
@@ -44,7 +43,7 @@ import com.project.dailyquest.widgets.InputTextField
 @Composable
 fun ProfileScreen(
     scaffoldPadding: PaddingValues = PaddingValues(),
-    authState: AuthState = AuthState(),
+    profileEditLoadingState: AuthState = AuthState(),
     user: FirebaseUser,
     onAddName: (String) -> Unit = {},
     onSkip: () -> Unit = {}
@@ -100,7 +99,8 @@ fun ProfileScreen(
                     Text(text = "Take me Home")
                 }
                 Spacer(modifier = Modifier.height(4.dp))
-                if (authState.status == AuthState.Status.LOADING) CircularProgressIndicator()
+                if (profileEditLoadingState.status == AuthState.Status.LOADING)
+                    CircularProgressIndicator()
                 else TextButton(onClick = onSkip,
                     modifier = Modifier
                         .padding(end = 24.dp).
