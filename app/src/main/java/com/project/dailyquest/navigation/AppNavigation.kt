@@ -40,11 +40,17 @@ fun AppNavigation(
 
         composable(route = AppScreens.SplashScreen.name) {
             val route = if (user != null) AppScreens.HomeScreen.name else AppScreens.LoginScreen.name
+            var hasNavigated by remember { mutableStateOf(false) }
             SplashScreen(
                 userDataRefreshState = authState.value,
-                onSplashScreenFinish = { navController.navigate(route) {
-                    popUpTo(AppScreens.SplashScreen.name) { inclusive = true }
-                } }
+                onSplashScreenFinish = {
+                    if (!hasNavigated) {
+                        hasNavigated = true
+                        navController.navigate(route) {
+                            popUpTo(AppScreens.SplashScreen.name) { inclusive = true }
+                        }
+                    }
+                }
             )
         }
 

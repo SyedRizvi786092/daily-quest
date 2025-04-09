@@ -1,6 +1,5 @@
 package com.project.dailyquest.screens
 
-import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -66,8 +66,8 @@ fun SplashScreen(
                 contentDescription = "App Logo",
                 modifier = Modifier.scale(scale.value)
             )
-//            Spacer(modifier = Modifier.height(24.dp))
-//            if (authState.status is AuthState.Status.LOADING) CircularProgressIndicator()
+            Spacer(modifier = Modifier.height(24.dp))
+            if (userDataRefreshState.status is AuthState.Status.LOADING) CircularProgressIndicator()
 //            Log.d("Splash", "SplashScreen: $userDataRefreshState")
         }
     }

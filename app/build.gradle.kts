@@ -5,11 +5,12 @@ plugins {
     id("kotlin-kapt")
     id("com.google.devtools.ksp")
     id("com.google.gms.google-services")
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
     namespace = "com.project.dailyquest"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.project.dailyquest"
